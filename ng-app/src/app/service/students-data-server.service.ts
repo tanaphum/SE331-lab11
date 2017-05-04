@@ -18,7 +18,10 @@ export class StudentsDataServerService {
   getStudentsData() {
     let studentArray: Student[];
     return this.http.get('http://localhost:8080/student',({headers:this.headers}))
-      .map(res => res.json());
+      .map(res => res.json())
+      .catch( (error: any) => {
+         return Observable.throw(new Error('UnAuthorize'));
+        });
 
   }
 
@@ -48,7 +51,8 @@ export class StudentsDataServerService {
         else if (error.status === 406) {
           return Observable.throw(new Error(error.status));
         }
-        return error;
+
+        return Observable.throw(new Error('UnAuthorize'));
       })
       ;
 
@@ -86,7 +90,7 @@ export class StudentsDataServerService {
             return res.json()
           })
           .catch((error: any) => {
-            return Observable.throw(new Error(error.status))
+            return Observable.throw(new Error('UnAuthorize'));
           })
       })
 

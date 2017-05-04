@@ -1,7 +1,10 @@
 package camt.cbsd.entity.security;
 
+import camt.cbsd.entity.Student;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -15,6 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class User {
 
     @Id
@@ -57,11 +61,17 @@ public class User {
     @NotNull
     private Date lastPasswordResetDate;
 
+    @OneToOne
+    @JsonManagedReference
+    Student student;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "USER_AUTHORITY",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+    @JsonManagedReference
     private List<Authority> authorities;
 
     public Long getId() {

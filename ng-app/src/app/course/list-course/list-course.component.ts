@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Course} from '../../students/course';
 import {CourseServerService} from '../../service/course-server.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 
 @Component({
   selector: 'app-list-course',
@@ -11,13 +11,17 @@ import {ActivatedRoute, Params} from '@angular/router';
 export class ListCourseComponent implements OnInit {
 
   courses:Course[];
-  constructor(private courseService:CourseServerService,private route:ActivatedRoute) { }
+  constructor(private courseService:CourseServerService,private route:ActivatedRoute,private router: Router) { }
 
   result:string;
   ngOnInit() {
     this.route.queryParams
       .subscribe((params : Params) => {
       this.result = params['result'];
+    },(error : Error ) => {
+      if (error.message === 'UnAuthorize'){
+        this.router.navigate(['login'],{queryParams:{source:'student'}});
+      }
     });
 
     this.courseService.getCourse()

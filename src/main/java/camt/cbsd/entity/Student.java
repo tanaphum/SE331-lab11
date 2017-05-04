@@ -1,6 +1,9 @@
 package camt.cbsd.entity;
 
+import camt.cbsd.entity.security.Authority;
+import camt.cbsd.entity.security.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
@@ -34,6 +37,10 @@ public class Student {
     String description;
     @ManyToMany
     List<Course> enrolledCourse = new ArrayList<>();
+    @OneToOne(mappedBy = "student")
+    @JsonManagedReference
+    User user;
+
 
     public List<Course> addCourse(Course course) {
         enrolledCourse = Optional.ofNullable(enrolledCourse).orElse(new ArrayList<>());
@@ -41,6 +48,10 @@ public class Student {
         return enrolledCourse;
 
     }
+
+    public List<Authority> getAuthorities(){
+         return user.getAuthorities();
+         }
 
 
 }

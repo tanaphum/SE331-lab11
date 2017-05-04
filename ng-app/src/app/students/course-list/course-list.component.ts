@@ -10,6 +10,7 @@ import {Course} from '../course';
 })
 export class CourseListComponent {
   constructor() {
+
   }
 
   @Input() count:number;

@@ -17,7 +17,6 @@ export class StudentsAddComponent {
   ngOnInit() {
     this.student = new Student();
   }
-
   upQuantity(student: Student) {
     student.penAmount++;
   }

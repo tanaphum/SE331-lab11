@@ -1,9 +1,11 @@
 package camt.cbsd.security.controller;
 
+import camt.cbsd.entity.Student;
 import camt.cbsd.security.JwtAuthenticationRequest;
 import camt.cbsd.security.JwtTokenUtil;
 import camt.cbsd.security.JwtUser;
 import camt.cbsd.security.service.JwtAuthenticationResponse;
+import camt.cbsd.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class AuthenticationRestController {
 
     @Value("${jwt.header}")
     private String tokenHeader;
+
+    @Autowired
+    private StudentService studentService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -51,8 +58,14 @@ public class AuthenticationRestController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails, device);
 
+        Student student = studentService.getStudentForTransfer(authenticationRequest.getUsername());
+
         // Return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        Map result = new HashMap();
+        result.put("token",token);
+        result.put("student",student);
+        return ResponseEntity.ok(result);
+        //2.13 java.lang.IllegalStateException: Cannot call sendError()
     }
 
 

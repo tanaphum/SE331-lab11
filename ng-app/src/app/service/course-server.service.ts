@@ -17,7 +17,10 @@ export class CourseServerService {
   getCourse():Observable<Course[]>{
 
     return this.http.get('http://localhost:8080/course',({headers:this.headers}))
-      .map(res => res.json());
+      .map(res => res.json())
+      .catch( (error: any) => {
+        return Observable.throw(new Error('UnAuthorize'));
+      });
   }
 
   addCourse(course:Course){
