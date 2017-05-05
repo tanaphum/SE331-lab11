@@ -10,12 +10,19 @@ import {StudentsDataService} from "../../service/students-data.service";
 })
 export class StudentsAddComponent {
   student: any = {};
-
+  students: Student[];
   constructor(private studentDataService: StudentsDataService, private router: Router) {
   };
 
   ngOnInit() {
     this.student = new Student();
+    this.studentDataService.getStudentsData()
+      .subscribe(students => this.students = students,
+        (error : Error ) => {
+          if (error.message === 'UnAuthorize'){
+            this.router.navigate(['login'],{queryParams:{source:'Add student'}});
+          }
+        });
   }
   upQuantity(student: Student) {
     student.penAmount++;

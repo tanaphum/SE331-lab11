@@ -3,6 +3,8 @@ import {Course} from '../../students/course';
 import {Http} from '@angular/http';
 import {CourseServerService} from '../../service/course-server.service';
 import {Router} from '@angular/router';
+import {Student} from "../../students/student";
+import {StudentsDataService} from "../../service/students-data.service";
 
 @Component({
   selector: 'app-add-course',
@@ -10,11 +12,17 @@ import {Router} from '@angular/router';
   styleUrls: ['./add-course.component.css']
 })
 export class AddCourseComponent implements OnInit {
-
-  constructor(private courseService:CourseServerService,private router:Router) { }
+  students: Student[];
+  constructor(private courseService:CourseServerService,private router:Router,private studentDataService: StudentsDataService) { }
   course:any = {};
   ngOnInit() {
-
+    this.studentDataService.getStudentsData()
+      .subscribe(students => this.students = students,
+        (error : Error ) => {
+          if (error.message === 'UnAuthorize'){
+            this.router.navigate(['login'],{queryParams:{source:'Add Course'}});
+          }
+        });
   }
 
   addCourse(course:Course){

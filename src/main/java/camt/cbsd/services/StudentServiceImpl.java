@@ -75,8 +75,17 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudentForTransfer(String username) {
          Student student = studentDao.findByUsername(username);
-         Hibernate.initialize(student.getAuthorities());
+        Hibernate.initialize(student.getUser());
+        Hibernate.initialize(student.getAuthorities());
          return student;
 
+    }
+
+    @Override
+    @Transactional
+    public List<Student> queryStudent(String query) {
+         if (query == null || query.equals(""))
+            return studentDao.getStudents();
+         return studentDao.getStudents(query);
     }
 }

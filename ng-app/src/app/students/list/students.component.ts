@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {Student} from '../student';
 import {StudentsDataService} from "../../service/students-data.service";
 import {Router} from "@angular/router";
-
+import {URLSearchParams} from '@angular/http';
 
 @Component({
   selector: 'students',
@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 })
 export class StudentsComponent {
   students: Student[];
+  search : string;
 
   constructor(private studentDataService: StudentsDataService, private router: Router ) {
   }
@@ -52,4 +53,13 @@ export class StudentsComponent {
   showDetail(student: Student){
     this.router.navigate(['/detail',student.id]);
   }
+  onSearch(){
+    this.studentDataService.findStudent(this.search)
+    .subscribe(students => this.students = students,
+      (error : Error ) => {
+      if (error.message === 'UnAuthorize'){
+          this.router.navigate(['login'],{queryParams:{source:'student'}});
+         }
+      });
+     }
 }

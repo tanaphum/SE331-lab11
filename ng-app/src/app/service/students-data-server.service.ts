@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Student} from '../students/student';
-import {Http, Headers, Response, RequestOptions} from '@angular/http';
+import {Http, Headers, Response, RequestOptions, URLSearchParams} from '@angular/http';
 import {Observable} from "rxjs/Rx";
 import {AuthenticationService} from './authentication.service';
 
@@ -79,7 +79,7 @@ export class StudentsDataServerService {
     formData.append('file', file);
     let header = new Headers({'Authorization': 'Bearer ' + this.authenticationService.getToken()});
     let options = new RequestOptions({headers: header});
-    return this.http.post('http://localhost:8080/student/image', formData,options)
+    return this.http.post('http://localhost:8080/student/image', formData, options)
       .flatMap(filename => {
         student.image = filename.text();
         let headers = new Headers({'Content-Type': 'application/json',});
@@ -93,8 +93,14 @@ export class StudentsDataServerService {
             return Observable.throw(new Error('UnAuthorize'));
           })
       })
-
-
-
   }
+
+    findStudent(search:string){
+      let student: Student;
+      let params: URLSearchParams = new URLSearchParams();
+      params.set('search', search);
+      return this.http.get('http://localhost:8080/students/',{headers:this.headers,search: params})
+      .map(res => res.json());
+    }
+
 }

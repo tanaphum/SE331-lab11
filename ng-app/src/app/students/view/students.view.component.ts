@@ -9,6 +9,7 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: ['./students.view.component.css']
 })
 export class StudentsViewComponent {
+  students: Student[];
   constructor(private route: ActivatedRoute, private studentDataService: StudentsDataService) {
   }
 

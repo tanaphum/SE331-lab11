@@ -13,4 +13,5 @@ public interface StudentDao {
     Student addStudent(Student student);
     Integer size();
     Student findByUsername(String username);
+    List<Student> getStudents(String searchText);
 }

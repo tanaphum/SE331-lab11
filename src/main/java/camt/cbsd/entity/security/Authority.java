@@ -1,6 +1,9 @@
 package camt.cbsd.entity.security;
 
+import camt.cbsd.config.json.View;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -20,14 +23,16 @@ public class Authority {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "authority_seq")
     @SequenceGenerator(name = "authority_seq", sequenceName = "authority_seq", allocationSize = 1)
+    @JsonView(View.Login.class)
     private Long id;
 
     @Column(name = "NAME", length = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
+    @JsonView(View.Login.class)
     private AuthorityName name;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private List<User> users;
 
